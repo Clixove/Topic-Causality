@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Clixove</title>
+    {% include 'clixove.org/packages.html' %}
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">{% include 'clixove.org/navigator.html' %}</div>
+    <div class="row alert justify-content-center">
+        <div class="col-md-8">
+            <p class="lead fw-normal text-center">新建任务</p>
+            <div class="alert bg-light my-4">
+                <form action="/task/add-2" method="post" class="form" enctype="multipart/form-data">
+                    {{ add_task_form.as_p }}
+                    <div class="text-center">
+                        <input type="submit" value="提交" class="btn btn-outline-success">
+                    </div>
+                </form>
+            </div>
+            <p>仅接受 Microsoft Excel (*.xlsx) 格式的数据.</p>
+            <p class="text-muted">
+                舆情数据集是一个二维表格, 其中每一行包含一个互联网论坛的帖子, 每一列代表帖子的一个属性. 既可以上传自己采集的数据,
+                也可以使用首页的"采集数据"按钮中列出的工具采集数据. 数据的属性可以自定义, 但必须包含"点赞""评论""转发"等互动的数量,
+                发帖时间, 发帖人唯一ID(或唯一名字), 帖子的正文文本.
+            </p>
+        </div>
+    </div>
+    <div class="row">{% include 'clixove.org/copyright.html' %}</div>
+</div>
+</body>
+</html>

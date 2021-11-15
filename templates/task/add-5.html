@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Clixove</title>
+    {% include 'clixove.org/packages.html' %}
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">{% include 'clixove.org/navigator.html' %}</div>
+    <div class="row alert justify-content-center">
+        <div class="col-md-8">
+            <p class="lead fw-normal text-center">描述性统计</p>
+            <p><a href="/task/add-3?index={{ task_id }}">上一步</a></p>
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="/stats_fig/time_trending?index={{ task_id }}" alt="..." width="100%">
+                    <p class="helptext">图1. 每日帖子的数量</p>
+                </div>
+                <div class="col-md-6">
+                    <img src="/stats_fig/user_trending?index={{ task_id }}" alt="..." width="100%">
+                    <p class="helptext">图2. 用户发帖数量的分布</p>
+                </div>
+            </div>
+            <p>如果你确认采集到的数据是正确的, 请点击以下按钮, 启动BERT-3模型分析帖子文本.</p>
+            <p class="text-center">
+                <button class="btn btn-outline-success" onclick="$.ajax({
+                    type: 'GET', url: '/task/add-6?index={{ task_id }}'}); window.open(
+                    '/task/list?color=success&message=已向BERT-3模型发送指令, 请等待一段时间后查看运行结果.', '_self');">
+                    启动BERT-3模型
+                </button>
+            </p>
+            <p class="helptext">分析过程可能需要数个小时(以10,000个帖子计算), 你可以关闭软件, 等待一段时间后登入以查看运行结果.</p>
+        </div>
+    </div>
+    <div class="row">{% include 'clixove.org/copyright.html' %}</div>
+</div>
+</body>
+</html>

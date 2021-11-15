@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Clixove</title>
+    {% include 'clixove.org/packages.html' %}
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">{% include 'clixove.org/navigator.html' %}</div>
+    <div class="row alert justify-content-center">
+        <div class="col-md-8">
+            <p class="lead fw-normal text-center">注册</p>
+            <ul>频率限制:
+                <li>每个IP地址每10分钟最多提交70个注册请求. (为机构使用)</li>
+                <li>每1分钟最多关于每个用户名提交1次注册请求.</li>
+                <li>每1分钟最多向每个电子邮件地址发送1个注册请求.</li>
+            </ul>
+            <form role="form" action="/my_login/register/add" method="post">
+                {{ RegisterSheet.as_p }}
+                <div class="text-center">
+                    <input type="submit" class="btn btn-outline-success" value="发送邮件" />
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">{% include 'clixove.org/copyright.html' %}</div>
+</div>
+</body>
+</html>

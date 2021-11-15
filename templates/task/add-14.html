@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Clixove</title>
+    {% include 'clixove.org/packages.html' %}
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">{% include 'clixove.org/navigator.html' %}</div>
+    <div class="row alert justify-content-center">
+        <div class="col-md-8">
+            <p class="lead fw-normal text-center">Granger因果检验</p>
+            <p><a href="/task/add-12?index={{ task_id }}">上一步</a></p>
+            <ol>使用说明:
+                <li>请从一个发贴量较大的用户开始, 分析他施加的影响, 并在被显著影响的用户中, 寻找下一个作为因果关系的主动方.</li>
+                <li>只有活跃的用户才能判定因果关系, 而发帖量很少的用户无法计算出因果关系, 所以如果尝试许多用户都未算出因果关系数据,
+                请重新选择发帖量较大的用户.</li>
+                <li>如果计算缓慢, 请使用更小的"滞后阶".</li>
+                <li>结果按最大"滞后阶"的检验p值, 从小到大排列.</li>
+            </ol>
+            <form class="form alert" id="search-user">
+                <p><b>搜索因果关系的用户</b></p>
+                {{ search_user.as_p }}
+                <div class="text-center">
+                    <button type="submit" class="btn btn-outline-success">搜索</button>
+                </div>
+            </form>
+            <form class="form alert" id="gc">
+                <p><b>设置Granger因果检验模型的参数</b></p>
+                <div id="search-user-return"></div>
+                <p class="helptext">
+                    提交后需要不到一分钟时间运行(以10,000个用户为例), 请留在本页等待结果, 如果离开则无法查看结果.
+                </p>
+                <div class="text-center">
+                    <input type="submit" value="检验" class="btn btn-outline-success">
+                </div>
+            </form>
+            <div style="overflow-x: auto;" id="granger-causality-return"></div>
+        </div>
+    </div>
+    <div class="row">{% include 'clixove.org/copyright.html' %}</div>
+</div>
+</body>
+</html>
+
+<script>
+    $('#search-user').submit(function (e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: '/gc/get_gc_config',
+            data: $(this).serialize(),
+            success: (response) => {document.getElementById('search-user-return').innerHTML = response},
+        });
+    });
+    $('#gc').submit(function (e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: '/task/add-15',
+            data: $(this).serialize(),
+            success: (response) => {document.getElementById('granger-causality-return').innerHTML = response},
+        });
+    });
+</script>

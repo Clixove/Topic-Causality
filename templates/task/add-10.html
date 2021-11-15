@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Clixove</title>
+    {% include 'clixove.org/packages.html' %}
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">{% include 'clixove.org/navigator.html' %}</div>
+    <div class="row alert justify-content-center">
+        <div class="col-md-8">
+            <p class="lead fw-normal text-center">事件聚类</p>
+            <p><a href="/task/add-8?index={{ task_id }}">上一步</a></p>
+            <p>
+                这一步将BERT-3模型提取的文本特征聚类为事件. 聚类使用DBSCAN算法, 需要手动确定"Minimum Points"和"Epsilon"参数的数值.
+                算法默认"Minimum Points"是保留维度数量的2倍, 而"Epsilon"参数应从下图中确定.
+            </p>
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <img src="/event_ts/knn?index={{ task_id }}" alt="..." width="100%">
+                    <p class="helptext">图4. K近邻排序图</p>
+                </div>
+            </div>
+            <p>
+                将文本特征向量投影到特征空间, 由以下两步绘制K近邻排序图: <br>
+                [1] 计算每个点到其他点的距离, 从小到大排列, 记录第"Minimum Points"个距离, 即K近邻距离. <br>
+                [2] 将每个点和对应的K近邻距离, 按K近邻从小到大排列, 绘制成折线图.
+            </p>
+            <p>
+                DBSCAN聚类应找到一个判定"邻域"的阈值. 如果一个点的K近邻距离小于阈值, 则它的邻域内有超过"Minimum Points"个点,
+                也就会和周围的点聚成一类; 如果一个点的K近邻距离大于阈值, 则它的邻域内有少于"Minimum Points"个点, 它被认为是孤立点.
+                根据聚类任务要求的细致程度, 应将"Epsilon"设置在图4的上凸函数的拐点和下凸函数的拐点之间.
+            </p>
+
+            <form class="form alert bg-light" id="dbscan">
+                {{ set_epsilon.as_p }}
+                <p class="helptext">
+                    提交后需要不到一分钟时间运行(以10,000个帖子为例), 你可以留在本页等待, 也可以退出软件并在一段时间后登入查看.
+                </p>
+                <div class="text-center">
+                    <input type="submit" value="聚类" class="btn btn-outline-success">
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">{% include 'clixove.org/copyright.html' %}</div>
+</div>
+</body>
+</html>
+
+<script>
+    $('#dbscan').submit(function (e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: '/task/add-11',
+            data: $(this).serialize(),
+            success: (response) => {window.open(response, '_self');},
+        });
+    });
+</script>

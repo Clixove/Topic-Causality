@@ -1,0 +1,20 @@
+<table class="table table-sm table-condensed">
+    <tfoot class="helptext">Granger因果检验结果 {{ timestamp | date:'Y-m-d H:i:s' }}</tfoot>
+    <thead><tr>
+        <td class="text-nowrap">关联用户</td>
+        {% with ''|center:max_lag as range %} {% for _ in range %}
+        <td class="text-nowrap">F统计量和显著性(lag={{ forloop.counter }})</td>
+        {% endfor %} {% endwith %}
+    </tr></thead>
+    <tbody>
+    {% for record in gc_results %}
+    <tr>
+        <td class="text-nowrap">{{ record.username }}</td>
+        {% for one_lag in record.stats %}
+            <td class="text-nowrap">{{ one_lag.0 | floatformat:2 }} (p={{ one_lag.1 | floatformat:4 }})</td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+    </tbody>
+    <caption>如果没有任何数据, 说明该用户的Granger因果关系无法被判别, 可能因为选定用户未在选定事件中发表任何言论.</caption>
+</table>

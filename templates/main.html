@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Clixove</title>
+    {% include 'clixove.org/packages.html' %}
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">{% include 'clixove.org/navigator.html' %}</div>
+    <div class="row alert">
+        <div class="col-md-12">
+            <h1 class="my-4 text-center">舆情事件的Granger因果检验软件</h1>
+        </div>
+    </div>
+    <div class="row alert">
+        <div class="col-md-12 text-center">
+            <div class="btn-group">
+                <button type="button" class="btn btn-lg btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                    采集数据
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="https://github.com/dataabc/weibo-search">
+                        从新浪微博搜索话题相关的帖子
+                    </a></li>
+                </ul>
+            </div>
+            <label style="width: 4ch;"></label>
+            <button type="button" class="btn btn-lg btn-outline-success" onclick="window.open('/task/list', '_self')">
+                分析数据
+            </button>
+        </div>
+    </div>
+    <div class="row alert justify-content-center">
+        <div class="col-md-8">
+            <p class="lead fw-normal">软件简介</p>
+            <p>
+                当企业推出宣传活动时, 会在网络论坛或社交媒体上引起一番讨论. 但是, 一些企业的竞争对手可能雇佣大量的低级账户或使用大量的机器人,
+                发表负面评论, 影响客户群体对真实商品或服务质量的认知. 本软件使用BERT-3自然语言处理模型解析评论文本,
+                接着通过DBSCAN聚类将评论总结为数个舆情事件, 然后通过统计学领域的"Granger因果检验"技术, 识别舆情事件在不同用户之间的互相影响.
+                关于因果关系的主动方, 本软件可以追踪已知的恶意评论在社区中的传播链路; 关于因果检验的被动方, 本软件可以检验一个用户的负面态度,
+                是受到哪些评论的影响或是自己产生的, 从而使别被雇佣的低级账户.
+            </p>
+        </div>
+    </div>
+    <div class="row alert justify-content-center">
+        <div class="col-md-8">
+            <p class="lead fw-normal">分析流程</p>
+        </div>
+    </div>
+    <div class="row alert justify-content-center">
+        <div class="col-md-4">
+            <img src="/static/workflow_cn.png" width="100%">
+        </div>
+        <div class="col-md-6">
+            <div class="alert bg-light">
+                <b>Granger因果检验:</b>
+                格兰杰因果关系检验（英语：Granger causality test）是一种假设检验的统计方法，
+                检验一组时间序列是否是另一组时间序列的原因。它的基础是回归分析当中的自回归模型。回归分析通常只能得出不同变量间的同期相关性；
+                自回归模型只能得出同一 变量前后期 的相关性；但诺贝尔经济学奖得主克莱夫·格兰杰(Clive Granger)于1969年论证，
+                在自回归模型中透过一系列的检验进而揭示不同变量之间的时间落差相关性是可行的。<br>
+                格兰杰本人在其2003年获奖演说中强调了其引用的局限性，以及“很多荒谬论文的出现”。格兰杰因果关系检验的结论只是一种统计估计，
+                不是真正意义上的因果关系，不能作为肯定或否定因果关系的根据。同时，格兰杰因果关系检验也有一些不足之处，如并未考虑干扰因素的影响，
+                也未考虑时间序列间非线性的相互关系。一些基于格兰杰因果关系检验的方法一定程度上解决了这些问题。---- 资料来源:
+                <a href="https://en.wikipedia.org/wiki/Granger_causality">维基百科</a>
+            </div>
+            <div class="alert bg-light">
+                <b>BERT-3模型:</b>
+                BERT起源于预训练的上下文表示学习，包括半监督序列学习，生成预训练，ELMo和ULMFit。
+                与之前的模型不同，BERT是一种深度双向的、无监督的语言表示，且仅使用纯文本语料库进行预训练的模型。
+                上下文无关模型（如word2vec或GloVe）为词汇表中的每个单词生成一个词向量表示，因此容易出现单词的歧义问题。
+                BERT考虑到单词出现时的上下文。例如，词“水分”的word2vec词向量在“植物需要吸收水分”和“财务报表里有水分”是相同的，
+                但BERT根据上下文的不同提供不同的词向量，词向量与句子表达的句意有关。 ---- 资料来源:
+                <a href="https://en.wikipedia.org/wiki/BERT_(language_model)">维基百科</a>
+            </div>
+        </div>
+    </div>
+    <div class="row">{% include 'clixove.org/copyright.html' %}</div>
+</div>
+</body>
+</html>

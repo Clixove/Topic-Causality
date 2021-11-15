@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Clixove</title>
+    {% include 'clixove.org/packages.html' %}
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">{% include 'clixove.org/navigator.html' %}</div>
+    <div class="row alert justify-content-center">
+        <div class="col-md-8">
+            <p class="lead fw-normal text-center">建立舆情的时间序列</p>
+            <p><a href="/task/add-10?index={{ task_id }}">上一步</a></p>
+            <table class="table table-hover">
+                <caption class="caption-top text-dark">帖子中提取的事件</caption>
+                <thead><tr>
+                    <td>事件编号</td><td>帖子数量</td><td>操作</td>
+                </tr></thead>
+                <tbody>
+                {% for class in clusters_detail %}
+                <tr>
+                    <td>{{ class.label }}</td>
+                    <td>{{ class.count }}</td>
+                    <td>
+                        <a data-bs-toggle="modal" data-bs-target="#example-{{ class.label }}" class="text-primary">
+                            查看代表性言论
+                        </a>
+                    </td>
+                </tr>
+                <!-- Modal -->
+                <div class="modal fade" id="example-{{ class.label }}" tabindex="-1"
+                     aria-labelledby="example-{{ class.label }}-label" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">事件{{ class.label }}的代表性言论</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        {% for example in class.examples %}
+                        {{ example }}<hr>
+                        {% endfor %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+                </tbody>
+            </table>
+            <p class="helptext">其中"-1"类表示无法聚成事件的帖子, 所以同在"-1"类中的帖子不代表属于同一个事件.</p>
+
+        <p>
+            <b>对每个帖子考虑的因素不仅有文本特征, 还有影响力指标.</b> 影响力指标是互动指标按信息熵加权求和的结果, 频率分布如图5所示.
+        </p>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <img src="/event_ts/influence?index={{ task_id }}" alt="..." width="100%">
+                <p class="helptext">图5. 影响力指标</p>
+            </div>
+        </div>
+
+        <p>在这一步中, 应根据帖子所属的事件和影响力指标, 建立每个用户在每个事件中的舆情时间序列, 作为Granger因果推断的数据源.</p>
+        <form class="form alert bg-light" id="event-ts">
+            {{ sampling_time_series.as_p }}
+            <div class="text-center">
+                <input type="submit" value="生成舆情的时间序列" class="btn btn-outline-success">
+            </div>
+        </form>
+
+        </div>
+    </div>
+    <div class="row">{% include 'clixove.org/copyright.html' %}</div>
+</div>
+</body>
+</html>
+
+<script>
+    $('#event-ts').submit(function (e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: '/task/add-13',
+            data: $(this).serialize(),
+            success: (response) => {window.open(response, '_self');},
+        });
+    });
+</script>

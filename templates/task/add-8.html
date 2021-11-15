@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Clixove</title>
+    {% include 'clixove.org/packages.html' %}
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">{% include 'clixove.org/navigator.html' %}</div>
+    <div class="row alert justify-content-center">
+        <div class="col-md-8">
+            <p class="lead fw-normal text-center">主成分分析</p>
+            <p><a href="/task/add-5?index={{ task_id }}">上一步</a></p>
+
+            <p>
+                经过主成分分析算法的转换, 每个新的维度相互的独立, 并且解释了一部分原数据的方差. 每个维度解释的方差从大到小,
+                即表明越靠前的维度越重要性. 在下图中, 横轴是每个维度(记作X), 纵轴则是第1-X个维度解释的方差累计值.
+            </p>
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <img src="/event_ts/explained_variance_ratio?index={{ task_id }}" alt="..." width="100%">
+                    <p class="helptext">图3. 解释方差比率图</p>
+                </div>
+            </div>
+            <form class="form" action="/event_ts/adjust_pca_x_range" method="post">
+                {{ pca_x_range.task }}
+                调整横轴坐标范围 (0-768):
+                <div class="d-flex my-2">
+                    <label class="text-nowrap btn">从</label>
+                    <div class="col-auto">{{ pca_x_range.lower_bound }}</div>
+                    <label class="btn">到</label>
+                    <div class="col-auto">{{ pca_x_range.upper_bound }}</div>
+                    <input type="submit" class="btn btn-outline-success ms-4" value="重绘">
+                </div>
+            </form>
+            <p>
+                主成分分析应该保留尽可能少的维度, 解释尽可能多的方差. 因此, 应在解释方差比率图中找到上凸函数的拐点,
+                对应的横轴坐标即是应保留的维度数量.
+            </p>
+            <form class="form alert bg-light" id="decomposition">
+                {{ keep_dimension.as_p }}
+                <p class="helptext">
+                    提交后需要不到一分钟时间运行(以10,000个帖子为例), 你可以留在本页等待, 也可以退出软件并在一段时间后登入查看.
+                </p>
+                <div class="text-center">
+                    <input type="submit" class="btn btn-outline-success" value="降维">
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">{% include 'clixove.org/copyright.html' %}</div>
+</div>
+</body>
+</html>
+
+<script>
+    $('#decomposition').submit(function (e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: '/task/add-9',
+            data: $(this).serialize(),
+            success: (response) => {window.open(response, '_self');},
+        });
+    });
+</script>
