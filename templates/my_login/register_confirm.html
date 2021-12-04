@@ -11,8 +11,8 @@
         {% include 'clixove.org/navigator.html' %}
         <div class="alert alert-success">已成功发送注册确认邮件.</div>
     </div>
-    <div class="row">
-        <div class="col-md-12">
+    <div class="row alert justify-content-center">
+        <div class="col-md-8">
             <p class="lead text-center fw-normal">激活用户</p>
             <form action="/my_login/confirm" method="post">
                 {{ invitation_code_sheet.as_p }}

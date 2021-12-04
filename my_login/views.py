@@ -121,7 +121,6 @@ def add_register(req):
         string.ascii_uppercase + string.ascii_lowercase + string.digits, k=64))
     receiver = register_sheet.cleaned_data['email']
     try:
-        # send_confirm_email(invitation_code, register_sheet.cleaned_data['email'], host=req.META['HTTP_HOST'])
         msg = render(req, 'my_login/email.html', {'invitation_code': invitation_code}).content.decode('utf-8')
         msg = MIMEText(msg, 'html', 'utf-8')
         msg['From'] = formataddr(('Clixove', config['username']))
@@ -133,8 +132,7 @@ def add_register(req):
         server.quit()
     except Exception as e:
         return redirect(f'/my_login/register?message={e}&color=warning')
-    if User.objects.filter(username=register_sheet.cleaned_data['username']).exists() or \
-            Register.objects.filter(username=register_sheet.cleaned_data['username']).exists():
+    if User.objects.filter(username=register_sheet.cleaned_data['username']).exists():
         return redirect('/my_login/register?message=用户已存在.&color=danger')
     new_register = Register(
         username=register_sheet.cleaned_data['username'],
@@ -143,10 +141,7 @@ def add_register(req):
         invitation_code=invitation_code,
         group=register_sheet.cleaned_data['group'].group,
     )
-    try:
-        new_register.save()
-    except IntegrityError:
-        return redirect('/my_login/register/add')
+    new_register.save()
     return render(req, 'my_login/register_confirm.html', {'invitation_code_sheet': InvitationCode()})
 
 
@@ -160,6 +155,9 @@ def add_user(req):
         application = Register.objects.get(invitation_code=invitation_code.cleaned_data['invitation_code'])
     except Register.DoesNotExist:
         return redirect('/my_login/confirm?message=邀请码不正确.&color=warning')
+    if User.objects.filter(username=application.username).exists():
+        application.delete()
+        return redirect('/my_login/register?message=保留的用户名已过期.&color=danger')
     new_user = User(username=application.username, email=application.email)
     new_user.set_password(application.password)
     new_user.save()
