@@ -32,7 +32,7 @@ urlpatterns = [
     path('my_login/delete', v1.delete_login),
     path('my_login/register', v1.view_register),
     path('my_login/register/add', v1.add_register),
-    path('my_login/register/confirm/<str:invitation_code>', v1.add_user),
+    path('my_login/confirm', v1.add_user),
     # task manager
     path('main', v2.view_main),
     path('task/list', v2.view_tasks),
