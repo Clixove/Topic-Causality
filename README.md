@@ -39,12 +39,13 @@ opinion from intended intensive promotion.
 
 ## Installation
 
-1. Create `token` folder at project root. There are two files in token:
-`token/django_secret_key` and `token/smtp.json`. 
-In `django_secret_key`, there should be a string about 52 characters, being 
-a secret key for communication between client and web server. And in 
-`smtp.json`, there should be the config of web maintainer's email sender.
-The format is:
+The current folder of command line is the software's project root.
+
+### 1. Build token files
+
+Create `token` folder at project root. There should be several files in this folder:
+- In `token/django_secret_key`, there should be a string about 52 characters, being a secret key for communication between client and web server. 
+- In `token/smtp.json`, there should be the config of web maintainer's email sender. The format is: 
 ```json
 {
   "host": "example.com",
@@ -53,32 +54,57 @@ The format is:
   "password": "anypassword"
 }
 ```
-If you don't use a registration confirming service by email, you can modify
-the source code. It is mainly defined at `add_register` and `add_user` functions
-at `my_login/views.py`.
-
-2. Create the python environment. I recommend using a virtual 
-environment. After implementing that, please enter the environment and run:
-```bash
-pip install -r requirements
+- In `token/paypal.json`, there should be paypal sandbox's clinet ID and secret. In formal release, please replace `SandboxEnvironment` in `__init__` function in `paypal/models.py > PaypalClient` class with `LiveEnvironment`, and use live's clinet ID and secret in `token/paypal.json`. The format is:
+```json
+{
+  "client_id": "anypassword",
+  "secret": "anypassword"
+}
 ```
-It is a maximum required packages. With the environment, all functions can be
-used, but not all functions are necessary.
 
-3. Download BERT-3 models, and place model folders like 
-`bert_zh_preprocessing_3/` inside this project's `bert_models` folder.
+If you don't use a registration confirming service by email, `smtp.json` is not necessary. However, you should delete `add_register`, `send_confirm_email` functions and `RegisterSheet` class, and modify `add_user` function to link the result of `LoginForm` directly.
 
-4. Navigate to the project folder, and create the database and super-user:
-```bash
+### 2.	Build Python environment
+
+Install required Python packages:
+
+```
+pip install -r requirements.txt
+```
+
+It is a maximum required package. With the environment, all functions can be used, but not all functions are necessary.
+
+Navigate to the project folder, and create the database and superuser:
+
+```
 python manage.py migrate
 python manage.py createsuperuser
 ```
-This user has the root permission. To implement that, please follow the 
-director in command line.
 
-5. Run the server.
-```bash
-python manage.py 0.0.0.0:[port]
+Follow the instructions in the command line. This user has the highest permission in this software.
+
+### 3. Build static files
+
+Replace `STATICFILES_DIRS = ['templates/static']` with `STATIC_ROOT = 'templates/static'` in `sina_event_chain_django_cn/settings.py`.
+
+Run the command: 
 ```
-The IP address can only be 127.0.0.1 (for local use only) or 0.0.0.0 (for 
-web server), and the port can be customized.
+python manage.py collectstatic
+```
+
+Replace `STATIC_ROOT = 'templates/static'` with `STATICFILES_DIRS = ['templates/static']` in `sina_event_chain_django_cn/settings.py`.
+
+Replace `DEBUG = True` with `DEBUG = False` in `sina_event_chain_django_cn/settings.py`.
+
+### 4. Administrator's settings
+
+Run the command: 
+```
+python manage.py 0.0.0.0:$port --insecure
+```
+The IP address can only be 127.0.0.1 (for local use only) or 0.0.0.0 (for web server), and `port` can be customized.
+
+Visit [https://example.com:$port/admin](). Create at least one group. Add the groups, which users can freely add into, to "Register groups" table. These groups each must include the following permissions:
+- My login: add, change, view Register
+- Task manager: add, delete, change, view Task; add, delete, change, view AsyncErrorMessage;
+  add, delete, change, view Column.
