@@ -8,10 +8,10 @@
 <body>
 <div class="container-fluid">
     <div class="row">{% include 'clixove.org/navigator.html' %}</div>
-    <div class="row alert justify-content-center">
+    <div class="row alert">
         <div class="col-md-8">
             <div class="mb-2">
-                <button class="btn btn-outline-success text-nowrap" onclick="window.open('/task/add-1', '_self')">
+                <button class="btn btn-outline-success text-nowrap" onclick="window.open('/task/view_add', '_self')">
                     <b>+</b> 新建分析
                 </button>
             </div>
@@ -44,23 +44,20 @@
             </table>
             </div>
             <p class="helptext">点击名称, 以继续查看或编辑.</p>
-            <div style="overflow-x: auto;">
-            <table class="table table-hover">
-                <caption class="caption-top">错误日志</caption>
-                <thead><tr>
-                    <td>任务名称</td><td>发生时间</td><td>发生在步骤</td><td>错误信息</td>
-                </tr></thead>
-                <tbody>
+        </div>
+        <div class="col-md-4">
+            <div class="btn disabled">错误日志</div>
+            <div style="max-height: 600px; overflow-y: auto;">
                 {% for err in errors %}
-                <tr>
-                    <td class="text-nowrap">{{ err.task.name }}</td>
-                    <td class="text-nowrap">{{ err.happened_time | date:"Y-m-d H:i:j" }}</td>
-                    <td class="text-nowrap">{{ err.current_step_description }}</td>
-                    <td style="min-width: 25rem;">{{ err.error_message }}</td>
-                </tr>
+                <div class="alert mb-0">
+                <p>
+                    任务名称: {{ err.task.name }} <br>
+                    发生时间: {{ err.happened_time | date:"Y-m-d H:i:s" }} <br>
+                    发生在步骤: {{ err.current_step_description }} <br>
+                    错误信息: {{ err.error_message }}
+                </p>
+                </div>
                 {% endfor %}
-                </tbody>
-            </table>
             </div>
         </div>
     </div>

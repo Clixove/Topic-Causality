@@ -6,7 +6,7 @@ from django.contrib.contenttypes.models import ContentType
 from .models import *
 
 admin.site.site_url = "/main"
-admin.site.site_header = admin.site.site_title = "舆情事件因果检验软件"
+admin.site.site_header = admin.site.site_title = "舆情事件的Granger因果检验软件"
 admin.site.index_title = "Home"
 
 

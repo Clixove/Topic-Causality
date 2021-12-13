@@ -1,11 +1,5 @@
 token
 .idea
-migrate.sh
-port.sh
-
-weibo-search-master/
-obtain_data.sh
-tableau
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

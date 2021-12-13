@@ -4,18 +4,11 @@ Granger causality test for the posts in social networks
 
 ![](https://img.shields.io/badge/language-zh--CN-orange)
 ![](https://img.shields.io/badge/dependencies-Python%203.9-blue)
-![](https://img.shields.io/badge/dependencies-Django%203.2-green)
+![](https://img.shields.io/badge/dependencies-Django%204.0-green)
 ![](https://img.shields.io/badge/dependencies-TensorFlow%202.6-orange)
 
-## Acknowledge
-
-BERT-3 Preprocessing (Chinese Language): 
-https://tfhub.dev/tensorflow/bert_zh_preprocess/3
-
-BERT-3 Model (Chinese Language): 
-https://tfhub.dev/tensorflow/bert_zh_L-12_H-768_A-12/3
-
-Data collection tool: https://github.com/dataabc/weibo-search
+Chinese documentation: more details in 
+[documentation](./doc/舆情事件的Granger因果检验软件-说明书.docx)
 
 ## Introduction
 
@@ -37,15 +30,40 @@ causality test to figure out the causality between different accounts.
 As a conclusion, this technology is designed to help distinguish real public 
 opinion from intended intensive promotion.
 
+## Citation
+
+BERT-3 Preprocessing (Chinese Language): 
+https://tfhub.dev/tensorflow/bert_zh_preprocess/3
+
+BERT-3 Model (Chinese Language): 
+https://tfhub.dev/tensorflow/bert_zh_L-12_H-768_A-12/3
+
+Data collection tool: https://github.com/dataabc/weibo-search
+
+
 ## Installation
 
 The current folder of command line is the software's project root.
 
-### 1. Build token files
+### 1. Token
 
-Create `token` folder at project root. There should be several files in this folder:
-- In `token/django_secret_key`, there should be a string about 52 characters, being a secret key for communication between client and web server. 
-- In `token/smtp.json`, there should be the config of web maintainer's email sender. The format is: 
+Create a `token/` in project root, and include the following files in it.
+
+(1) `django_secret_key`
+
+There should be a string about 52 characters, being a secret key for 
+communication between client and web server. The string can be generated in
+[Djecrety](https://djecrety.ir/) website.
+
+(2) `smtp.json`
+
+If you don't use a registration confirming service by email, `smtp.json` is 
+not necessary. At the same time, you should disable registry related links in
+`sina_event_chain_django_cn/urls.py`.
+
+There should be the config of web maintainer's email sender in this file. 
+The format is:
+
 ```json
 {
   "host": "example.com",
@@ -54,17 +72,8 @@ Create `token` folder at project root. There should be several files in this fol
   "password": "anypassword"
 }
 ```
-- In `token/paypal.json`, there should be paypal sandbox's clinet ID and secret. In formal release, please replace `SandboxEnvironment` in `__init__` function in `paypal/models.py > PaypalClient` class with `LiveEnvironment`, and use live's clinet ID and secret in `token/paypal.json`. The format is:
-```json
-{
-  "client_id": "anypassword",
-  "secret": "anypassword"
-}
-```
 
-If you don't use a registration confirming service by email, `smtp.json` is not necessary. However, you should delete `add_register`, `send_confirm_email` functions and `RegisterSheet` class, and modify `add_user` function to link the result of `LoginForm` directly.
-
-### 2.	Build Python environment
+### 2. Python environment
 
 Install required Python packages:
 
@@ -72,7 +81,8 @@ Install required Python packages:
 pip install -r requirements.txt
 ```
 
-It is a maximum required package. With the environment, all functions can be used, but not all functions are necessary.
+It is a maximum required package. With the environment, all functions can be 
+used, but not all functions are necessary.
 
 Navigate to the project folder, and create the database and superuser:
 
@@ -81,30 +91,28 @@ python manage.py migrate
 python manage.py createsuperuser
 ```
 
-Follow the instructions in the command line. This user has the highest permission in this software.
+Follow the instructions in the command line. This user has the highest 
+permission in this software.
 
-### 3. Build static files
-
-Replace `STATICFILES_DIRS = ['templates/static']` with `STATIC_ROOT = 'templates/static'` in `sina_event_chain_django_cn/settings.py`.
-
-Run the command: 
-```
-python manage.py collectstatic
-```
-
-Replace `STATIC_ROOT = 'templates/static'` with `STATICFILES_DIRS = ['templates/static']` in `sina_event_chain_django_cn/settings.py`.
-
-Replace `DEBUG = True` with `DEBUG = False` in `sina_event_chain_django_cn/settings.py`.
-
-### 4. Administrator's settings
+### 3. Administrator's settings
 
 Run the command: 
+
 ```
 python manage.py 0.0.0.0:$port --insecure
 ```
-The IP address can only be 127.0.0.1 (for local use only) or 0.0.0.0 (for web server), and `port` can be customized.
 
-Visit [https://example.com:$port/admin](). Create at least one group. Add the groups, which users can freely add into, to "Register groups" table. These groups each must include the following permissions:
-- My login: add, change, view Register
-- Task manager: add, delete, change, view Task; add, delete, change, view AsyncErrorMessage;
-  add, delete, change, view Column.
+The IP address can only be 127.0.0.1 (for local use only) or 0.0.0.0 (for web 
+server), and `port` can be customized. After that, the website will be running
+at `https://example.com:$port/main`.
+
+(1) Registry permission
+
+1. Visit `https://example.com:$port/admin`. 
+2. Create at least one group instance, for example, named "Free plan" and
+   users can freely register into.
+3. Create a register group instance, and link to "Free plan".
+4. Add proper permissions to "Free plan", at least including:
+   "add, change, view Register", "add, delete, change, view Task", 
+   "add, delete, change, view AsyncErrorMessage", and
+   "add, delete, change, view Column".
