@@ -35,7 +35,8 @@ opinion from intended intensive promotion.
 
 The analysis flow of the software is shown in Figure 1. The green part represents the original data entered by the user, the blue part (parallelogram) represents the calculation process, and the yellow part (rectangle) represents the data of the intermediate process.
 
-![Figure 1](./doc/analysis process.svg)
+![](./doc/analysis-process.svg)
+Figure 1.
 
 Posts can be exported through tools provided by public opinion forums, obtained through web crawlers, or collected manually. Specifically, Sina Weibo posts are recommended to be collected using [this tool](https://github.com/cloudy-sfu/Web-Crawler-for--sina-weibo-), but it is not required. The structure of the post is a two-dimensional table in Microsoft Excel format, which must contain 1 field representing the user's identity (unique serial number), 1 field representing the body of the post, and a variable number representing interaction counts (reposts, likes, comments, etc. ) field.
 
@@ -112,7 +113,7 @@ The software outputs the statistics F and p to the user.
 The structure of this software is shown in Fugre 2, while the analyzing process is shown in FIgure 3.
 
 ![](doc/software-structure.png)
-Fugre 2.
+Figure 2.
 
 ![](doc/Steps.png)
 Figure 3.
