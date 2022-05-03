@@ -1,4 +1,4 @@
-# Causality of Public Opinions
+# "weibo.com" Granger causality
 
 Granger causality test for the posts in social networks 
 
