@@ -33,10 +33,9 @@ opinion from intended intensive promotion.
 
 ## Functions
 
-The analysis flow of the software is shown in Figure 1. The green part represents the original data entered by the user, the blue part (parallelogram) represents the calculation process, and the yellow part (rectangle) represents the data of the intermediate process.
+The analysis flow of the software is shown in the following figure. The green part represents the original data entered by the user, the blue part (parallelogram) represents the calculation process, and the yellow part (rectangle) represents the data of the intermediate process.
 
-![](./doc/analysis-process.svg)
-Figure 1.
+<img src="doc/analysis-process.svg" alt="analysis-process" height="400px" />
 
 Posts can be exported through tools provided by public opinion forums, obtained through web crawlers, or collected manually. Specifically, Sina Weibo posts are recommended to be collected using [this tool](https://github.com/cloudy-sfu/Web-Crawler-for--sina-weibo-), but it is not required. The structure of the post is a two-dimensional table in Microsoft Excel format, which must contain 1 field representing the user's identity (unique serial number), 1 field representing the body of the post, and a variable number representing interaction counts (reposts, likes, comments, etc. ) field.
 
@@ -44,12 +43,11 @@ After the user marks these fields through the form, the software is divided into
 
 ### 1. Analyzing interactions
 
-The engagement metrics for all posts is a $(N×n_f)$ matrix, where $N$ is the number of posts and n_f is the number of engagement metrics. Each column of the matrix represents a single interaction metric. The software first performs logarithmic transformation $x \to \ln⁡(x+1)$ on the matrix, and then performs normalization transformation $x \to \frac{x-\min ⁡x}{\max ⁡x - \min ⁡x}$ by column, and then converts the matrix **by row**. Weighted by information entropy. The information entropy of each indicator is shown in Equation 1.
+The engagement metrics for all posts is a $(N×n_f)$ matrix, where $N$ is the number of posts and n_f is the number of engagement metrics. Each column of the matrix represents a single interaction metric. The software first performs logarithmic transformation $x \to \ln⁡(x+1)$ on the matrix, and then performs normalization transformation $x \to \frac{x-\min ⁡x}{\max ⁡x - \min ⁡x}$ by column, and then converts the matrix **by row**. Weighted by information entropy. The information entropy of each indicator is shown as follow.
 
 $$
 p(x) = - \sum p(x_i) \ln p(x_i)
 $$
-Equation 1.
 
 The influence metric of a post is a $(N×1)$ vector representing the ability of the post to elicit engagement from other users.
 
@@ -89,12 +87,11 @@ The software compares the time series of the specified events between the two us
 1. Cause precedes effect;
 2. The future value of the result sequence, with specific information depending on the cause sequence.
 
-According to the above basic assumptions, the conditions for estimating that X has an influence on Y are shown in Equation 2. Among them, $L_{X,Y}(t)$ represents all the information of X and Y before time t; $L_Y(t)$ represents only the information of Y before time t.
+According to the above basic assumptions, the conditions for estimating that X has an influence on Y are shown as follow. Among them, $L_{X,Y}(t)$ represents all the information of X and Y before time t; $L_Y(t)$ represents only the information of Y before time t.
 
 $$
 \mathbb{P}[Y(t+1)|L_{X,Y}(t)] \neq \mathbb{P}[Y(t+1) | L_Y(t)]
 $$
-Equation 2.
 
 Strictly speaking, Granger causality requires differencing to make the time series stationary. Considering the practical significance of public opinion dissemination, the time series represents the change of the influence of public opinion, so the software does not test the stationarity and difference of the time series.
 
@@ -110,13 +107,11 @@ The software outputs the statistics F and p to the user.
 
 ## Structure
 
-The structure of this software is shown in Fugre 2, while the analyzing process is shown in FIgure 3.
+The structure of this software and the analyzing process are shown as follow.
 
 ![](doc/software-structure.png)
-Figure 2.
 
 ![](doc/Steps.png)
-Figure 3.
 
 All analysis process modules have dependencies on task management modules, and each analysis module has dependencies on modules located in front of the calculation steps.
 User login: This module is responsible for the user's login and registration functions. It inherits from the Authorize module of the Django function library and has the function of sending a registration confirmation email to the user.
@@ -135,17 +130,19 @@ Granger causality test: input the time series of events, this module is responsi
 
 The current folder of command line is the software's project root.
 
-### 1. Token
+**Use Django token.**
 
-Create a `token/` in project root, and include the following files in it.
+Generate the following structure of files in project root, and include the following files in it.
 
-(1) `django_secret_key`: There should be a string about 52 characters, being a secret key for 
-communication between client and web server. The string can be generated in [Djecrety](https://djecrety.ir/) website.
+```
+token/
+token/django_secret_key
+token/smtp.json
+```
 
-(2) `smtp.json`: If you don't use a registration confirming service by email, `smtp.json` is 
-not necessary. At the same time, you should disable registry related links in `sina_event_chain_django_cn/urls.py`.
+*Notice the email registry module is outdated. For developers, please use "my_login" module in Question-Go repository and make proper modifications. For end users, please contact the author to obtain technical supprt.*
 
-There should be the config of web maintainer's email sender in this file. The format is:
+`django_secret_key` is a plain text file which contains a token, generated at [Djecrety](https://djecrety.ir/) or a random string of 52 characters. `smtp.json` is the configuration file of emal registry module, using the following format.
 
 ```json
 {
@@ -156,38 +153,35 @@ There should be the config of web maintainer's email sender in this file. The fo
 }
 ```
 
-### 2. Python environment
+**Install Python environment.**
 
-Install required Python packages:
+Install required Python packages.
 
 ```
 pip install -r requirements.txt
 ```
 
-It is a maximum required package. With the environment, all functions can be used, but not all functions are necessary.
+*It is a maximum required package. With the environment, all functions can be used, but not all functions are necessary.*
 
-Navigate to the project folder, and create the database and superuser:
+Navigate to the project folder, and create the database and superuser.
 
 ```
 python manage.py migrate
 python manage.py createsuperuser
 ```
 
-Follow the instructions in the command line. This user has the highest permission in this software.
+Follow the instructions in the command line to create the super administrator.
 
-### 3. Administrator's settings
-
-Run the command: 
+Start the website with the following command, where `$port` should be replaced with customized port number.
 
 ```
 python manage.py 0.0.0.0:$port --insecure
 ```
 
-The IP address can only be 127.0.0.1 (for local use only) or 0.0.0.0 (for web server), and `port` can be customized. After that, the website will be running at `https://example.com:$port/main`.
+Visit `https://example.com:$port/main` to preview the index page, and visit `https://example.com:$port/admin` to configure registry permission.
 
-(1) Registry permission
+**Administrator's configuration.**
 
-1. Visit `https://example.com:$port/admin`. 
-2. Create at least one group instance, for example, named "Free plan" and users can freely register into.
-3. Create a register group instance, and link to "Free plan".
-4. Add proper permissions to "Free plan", at least including: "add, change, view Register", "add, delete, change, view Task", "add, delete, change, view AsyncErrorMessage", and   "add, delete, change, view Column".
+Create at least one user group. Basically, user permissions should include "add, change, view Register", "add, delete, change, view Task", "add, delete, change, view AsyncErrorMessage", and   "add, delete, change, view Column".
+
+Create a register group, and link to proper user groups.
